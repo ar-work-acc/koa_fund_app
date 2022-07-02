@@ -1,0 +1,5 @@
+node_modules/
+_app/
+coverage/
+dist/
+_logs/

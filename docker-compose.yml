@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+    app_funds:
+        build: .
+        image: archvile/app_funds
+        container_name: app_funds
+        depends_on:
+            - postgres
+            - redis
+        restart: "no"
+        ports:
+            - 3333:3000
+        networks:
+            - backend
+    postgres:
+        image: postgres:13.6-bullseye
+        container_name: postgres
+        restart: always
+        ports:
+            - 5432:5432
+        environment:
+            POSTGRES_DB: app_funds_prod
+            POSTGRES_PASSWORD: pw20220501
+        networks:
+            - backend
+    redis:
+        image: redis:6.2.6-bullseye
+        container_name: redis
+        command: redis-server --requirepass pw20220501
+        restart: always
+        ports:
+            - 6379:6379
+        networks:
+            - backend
+
+networks:
+    backend:
+        driver: bridge
