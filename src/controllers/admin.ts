@@ -12,9 +12,11 @@ import { AppDataSource } from "../database/DataSource"
 import Email from "../entities/Email"
 
 /**
- * This is only used for testing!
- * It simulates the situation when a new share price update is available
- * (so we can process orders)
+ * Allows admin to create a new share price for fund.
+ *
+ * This is used for demo.
+ * It simulates the situation when a new share price update is available (so we can process orders).
+ *
  * @param ctx
  * @param next
  */
@@ -33,9 +35,13 @@ export const createSharePrice = async (ctx: Context, next: Next) => {
 }
 
 /**
- * Used for testing only.
- * TODO This should be moved to a queue since it might take a long time!
- * TODO And it should be processed page by page, not all at once
+ * Allow admin to process user orders.
+ *
+ * If user balance is not enough at the time of processing,
+ * cancel the order and return any pre-paid trading fee.
+ *
+ * This is used for demo.
+ * TODO: this should be moved to a queue since it might take a long time!
  * @param ctx
  * @param next
  */

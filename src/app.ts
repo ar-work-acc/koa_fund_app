@@ -34,6 +34,8 @@ import { EmailQueue } from "./queue/bullmq"
 logger.debug(`check KOA keys: ${KOA_APP_KEY_0}, ${KOA_APP_KEY_1}`)
 
 /**
+ * Koa.js app.
+ * 
  * const app = new App()
  * (await) app.start()
  */
