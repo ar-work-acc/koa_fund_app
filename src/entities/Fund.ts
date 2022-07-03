@@ -24,6 +24,7 @@ class Fund extends BaseEntity {
     @PrimaryGeneratedColumn()
     id!: number
 
+    @Index({ unique: true })
     @Column({ length: 255 })
     name!: string
 

@@ -40,6 +40,7 @@ class Account extends BaseEntity {
     @Column({ default: false })
     isAgreementSigned!: boolean
 
+    @Index({ unique: true })
     @Column({ length: 127 })
     email!: string
 
