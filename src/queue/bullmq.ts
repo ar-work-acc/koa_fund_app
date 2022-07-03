@@ -1,4 +1,4 @@
-import { Queue, Worker, QueueScheduler } from "bullmq"
+import { Queue, Worker, QueueScheduler, Job } from "bullmq"
 import { logger } from "../utils/logger"
 import IORedis from "ioredis"
 import { REDIS_URL } from "../config"
@@ -13,80 +13,77 @@ export class EmailQueue {
     public queue: Queue
     public worker: Worker
     public queueScheduler: QueueScheduler
-    public connection
+    public connection: IORedis.Redis
 
     constructor() {
-        logger.debug(
-            `[EmailQueue] Initializing connection to Redis: ${REDIS_URL}`
-        )
-
+        logger.debug(`Initializing connection to Redis: ${REDIS_URL}`)
+        // get a Redis connection:
         this.connection = new IORedis(REDIS_URL, {
             maxRetriesPerRequest: null,
         })
 
+        // create queue scheduler, queue, and works with connections:
+        // queue scheduler:
         this.queueScheduler = new QueueScheduler(this.QUEUE_NAME, {
             connection: this.connection,
         })
 
+        // queue:
         this.queue = new Queue(this.QUEUE_NAME, { connection: this.connection })
 
+        // worker:
         this.worker = new Worker(
             this.QUEUE_NAME,
-            async (job) => {
-                logger.debug(
-                    `*** Processing email, name: ${job.name}, ID = ${job.data} ***`
-                )
+            async (job: Job) => {
+                const jobInfo = `job name: ${
+                    job.name
+                }, job data = ${JSON.stringify(job.data)}`
 
-                // update entry status and send email here:
-                const [emails, count] = await Email.findAndCount({
-                    skip: 0,
-                    take: 10,
-                    where: {
-                        isProcessed: false,
-                    },
-                })
-
-                logger.debug(
-                    `[EmailQueue] A total of ${count} emails are not processed (process at most 10)`
-                )
-                for (const email of emails) {
-                    email.isProcessed = true
-                    await email.save()
-                    // TODO email should be sent to users here, but this is just a demo
-                    logger.info(
-                        `[EmailQueue][email sent] Sending email to ${email.email}, order ID = ${email.orderId}, isSuccess = ${email.isSuccess}`
-                    )
+                if (job.data == "cron") {
+                    logger.debug(`*** Processing email, ${jobInfo} ***`)
+                    EmailQueue.processAndSendEmails()
+                } else {
+                    logger.debug(`*** Doing nothing, ${jobInfo} ***`)
                 }
             },
             { connection: this.connection }
         )
-
         this.worker.on("completed", (job) => {
             logger.debug(
-                `[EmailQueue] ${job.id} has completed! email: ${job.data}`
+                `${job.id} has completed! job data: ${job.data}`
             )
         })
-
         this.worker.on("failed", (job, err) => {
             logger.debug(
-                `[EmailQueue] ${job.id} has failed with ${err.message}, email: ${job.data}`
+                `${job.id} has failed with ${err.message}, job data: ${job.data}`
             )
         })
     }
 
     /**
-     * Process email after a delay.
-     * @param emailId the email ID to process
-     * @param delay delay in number to milliseconds
+     * Process and send emails. For cron.
      */
-    public async addJobToQueue(emailId: number, delay: number) {
-        await this.queue.add(
-            "check-orders-and-send-email-with-a-delay",
-            emailId,
-            {
-                delay,
-            }
+    public static async processAndSendEmails() {
+        // update entry status and send email here:
+        const [emails, count] = await Email.findAndCount({
+            skip: 0,
+            take: 10,
+            where: {
+                isProcessed: false,
+            },
+        })
+
+        logger.debug(
+            `A total of ${count} emails are not processed (process at most 10)`
         )
+        for (const email of emails) {
+            email.isProcessed = true
+            await email.save()
+            // TODO email should be sent to users here, but this is just a demo
+            logger.info(
+                `*** Sending email to ${email.email}, order ID = ${email.orderId}, isSuccess = ${email.isSuccess} ***`
+            )
+        }
     }
 
     /**

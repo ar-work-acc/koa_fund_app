@@ -5,6 +5,9 @@ import http from "http"
 
 import { logger } from "../src/utils/logger"
 import { runDatabaseDataInitialization } from "../src/database/initializeDB"
+import range from "lodash/range"
+import Email from "../src/entities/Email"
+import { EmailQueue } from "../src/queue/bullmq"
 
 describe("APIs admin: users", () => {
     let app: App
@@ -584,5 +587,35 @@ describe("APIs admin: users", () => {
             .set("Authorization", authorizationHeaderAdmin)
         expect(response.status).toBe(400)
         expect(response.body.message).toBe("User balance is not enough.")
+    })
+
+    test("email queue", async () => {
+        // create 20 new fake emails to send
+        for (const idx of range(20)) {
+            const email = new Email()
+            email.email = "meowfishorg@gmail.com"
+            email.orderId = 1000 + idx
+            email.isSuccess = true
+            email.isProcessed = false
+            await email.save()
+        }
+
+        const initialUnprocessedEmailCount = await Email.count({
+            where: {
+                isProcessed: false,
+            },
+        })
+
+        await EmailQueue.processAndSendEmails()
+
+        const leftUnprocessedEmailCount = await Email.count({
+            where: {
+                isProcessed: false,
+            },
+        })
+
+        expect(initialUnprocessedEmailCount - 10).toBe(
+            leftUnprocessedEmailCount
+        )
     })
 })
