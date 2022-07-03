@@ -12,7 +12,7 @@ import { AdminPanel } from "./features/admin/AdminPanel"
 import { Orders } from "./features/fund/Orders"
 
 function App() {
-    const [jwt, setJwt] = useState(null)
+    const [jwt, setJwt] = useState(localStorage.getItem("jwt"))
 
     const { data: account, isSuccess: getUserAccountSuccess } =
         useGetAccountInfoQuery(null, { skip: jwt === null })
