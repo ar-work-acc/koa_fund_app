@@ -6,6 +6,11 @@ import { getAccount, getPageAndPageSize } from "./util/parser"
 import Order from "../entities/Order"
 import { AppDataSource } from "../database/DataSource"
 
+/**
+ * Get the latest exchange rate for a specific currency.
+ * @param ctx get query param "currency" from ctx
+ * @param next
+ */
 export const getExchangeRate = async (ctx: Context, next: Next) => {
     let currency = ctx.request.query.currency
     currency = Array.isArray(currency) ? currency[0] : currency
@@ -28,6 +33,13 @@ export const getExchangeRate = async (ctx: Context, next: Next) => {
     ctx.body = target
 }
 
+/**
+ * Get a page of fund list (ordered by ID).
+ * Use query params: page, pageSize to get a specific page of fund.
+ * Default: first page with a size of 10.
+ * @param ctx
+ * @param next
+ */
 export const getFundList = async (ctx: Context, next: Next) => {
     const [page, pageSize] = getPageAndPageSize(ctx)
 
@@ -45,6 +57,11 @@ export const getFundList = async (ctx: Context, next: Next) => {
     }
 }
 
+/**
+ * Get fund detail by fund ID (path param).
+ * @param ctx
+ * @param next
+ */
 export const getFund = async (ctx: Context, next: Next) => {
     const { id } = ctx.params
     logger.debug(`Getting fund detail: ${id}`)
@@ -59,6 +76,12 @@ export const getFund = async (ctx: Context, next: Next) => {
     ctx.body = { fund }
 }
 
+/**
+ * Get details for an order from order ID; also checks JWT token for user ID
+ * and only allows access if the user owns that order.
+ * @param ctx
+ * @param next
+ */
 export const getOrder = async (ctx: Context, next: Next) => {
     const { id } = ctx.params
     // only get orders for the logged in account:
@@ -77,6 +100,12 @@ export const getOrder = async (ctx: Context, next: Next) => {
     ctx.body = order
 }
 
+/**
+ * Get the list of orders for a user, ordered by ID, DESC.
+ * Uses query param: page, pageSize (default: first page, size = 10)
+ * @param ctx
+ * @param next
+ */
 export const getOrderList = async (ctx: Context, next: Next) => {
     const [page, pageSize] = getPageAndPageSize(ctx)
 
@@ -113,6 +142,16 @@ export const getOrderList = async (ctx: Context, next: Next) => {
     }
 }
 
+/**
+ * Create a new order for user.
+ * Checks if user has signed the agreement, and also have enough balance.
+ * Also converts the amount ordered to USD first.
+ * If the fund type is pre-paid type, subtract the trading fee from balance first.
+ *
+ * @param ctx
+ * @param next
+ * @returns
+ */
 export const createOrder = async (ctx: Context, next: Next) => {
     const account = await getAccount(ctx)
 
