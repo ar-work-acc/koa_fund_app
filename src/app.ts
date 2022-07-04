@@ -27,7 +27,7 @@ import Koa from "koa"
 import koaStatic from "koa-static"
 import bodyParser from "koa-bodyparser"
 import router from "./routes/base"
-import applyCustomMiddleware from "./middlewares/index"
+import { morgan, jwtErrorSuppressor } from "./middlewares/index"
 import { AppDataSource } from "./database/DataSource"
 import { EmailQueue } from "./queue/bullmq"
 
@@ -35,7 +35,7 @@ logger.debug(`check KOA keys: ${KOA_APP_KEY_0}, ${KOA_APP_KEY_1}`)
 
 /**
  * Koa.js app.
- * 
+ *
  * const app = new App()
  * (await) app.start()
  */
@@ -47,7 +47,8 @@ export class App {
         this.app = new Koa()
 
         this.app.keys = [KOA_APP_KEY_0, KOA_APP_KEY_1]
-        applyCustomMiddleware(this.app)
+        this.app.use(morgan)
+        this.app.use(jwtErrorSuppressor)
         this.app.use(koaStatic(path.join(__dirname, "../_app")))
         this.app.use(bodyParser())
         this.app.use(router.routes()).use(router.allowedMethods())
