@@ -22,7 +22,7 @@ COPY wait-for-it.sh ./wait-for-it.sh
 COPY run.sh ./run.sh
 
 # other settings file (lazy here, should set the ENV variables)
-COPY prod.env ./.env
+COPY _prod.env ./_prod.env
 # Other environment variables:
 ENV NODE_ENV production
 

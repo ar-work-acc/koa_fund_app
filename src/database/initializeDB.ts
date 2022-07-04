@@ -1,7 +1,7 @@
 import path from "path"
 if (process.env.NODE_ENV === "production") {
     require("dotenv").config({
-        path: path.join(__dirname, "../../.env"),
+        path: path.join(__dirname, "../../_prod.env"),
     })
 }
 import { AppDataSourceGenerator } from "./DataSource"

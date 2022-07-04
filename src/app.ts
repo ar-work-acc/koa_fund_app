@@ -1,14 +1,18 @@
 import path from "path"
 switch (process.env.NODE_ENV) {
     case "development":
+        require("dotenv").config({
+            path: path.join(__dirname, "../_dev.env"),
+        })
+        break
     case "production":
         require("dotenv").config({
-            path: path.join(__dirname, "../.env"),
+            path: path.join(__dirname, "../_prod.env"),
         })
         break
     case "test":
         require("dotenv").config({
-            path: path.join(__dirname, "../test.env"),
+            path: path.join(__dirname, "../_test.env"),
         })
         break
 }
