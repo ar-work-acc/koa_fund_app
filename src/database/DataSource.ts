@@ -2,27 +2,40 @@ import "reflect-metadata" // TypeORM requirement
 
 import { join } from "path"
 import { DataSource } from "typeorm"
-import {
-    DB_NAME,
-    DB_PASSWORD,
-    NODE_ENV,
-    DB_HOST,
-    TEST_MODE, // note: TEST_MODE is a string, not boolean!
-} from "../config/index"
+import { DB_NAME, DB_PASSWORD, NODE_ENV, DB_HOST } from "../config/index"
 import { logger } from "../utils/logger"
-
-const synchronizeOrNot = NODE_ENV == "development" ? true : false
-logger.debug(
-    `Datasource using NODE_ENV=${NODE_ENV}, DB_HOST=${DB_HOST} synchronize schema: ${synchronizeOrNot}!`
-)
 
 // data source singleton:
 let datasource = null
-export const AppDataSourceGenerator = (
-    testMode: boolean = false
-): DataSource => {
+
+/**
+ * Use NODE_ENV to get the appropriate datasource.
+ * Generate a new datasource if it does not exist yet; else, return the singleton.
+ * @returns the appropriate datasource
+ */
+export const AppDataSourceGenerator = (): DataSource => {
+    let synchronize: boolean
+    let dropSchema: boolean
+
+    switch (NODE_ENV) {
+        case "development":
+            synchronize = true
+            dropSchema = false
+            break
+        case "production":
+            synchronize = false
+            dropSchema = false
+            break
+        case "test":
+            synchronize = true
+            dropSchema = true
+            break
+        default:
+            break
+    }
+
     if (datasource === null) {
-        logger.debug(`Initializing new datasource, testMode = ${testMode}`)
+        logger.debug(`Initializing new datasource for node env: ${NODE_ENV}`)
         datasource = new DataSource({
             type: "postgres",
             host: DB_HOST,
@@ -30,16 +43,13 @@ export const AppDataSourceGenerator = (
             username: "postgres",
             password: DB_PASSWORD,
             database: DB_NAME,
-            entities: [
-                // join(__dirname, "../entities/User.ts"),
-                join(__dirname, "../entities/**/*{.js,.ts}"),
-            ],
+            entities: [join(__dirname, "../entities/**/*{.js,.ts}")],
             migrations: [join(__dirname, "../migrations/**/*{.js,.ts}")],
             // synchronize - Indicates if database schema should be auto created on every application launch.
             // Be careful with this option and don't use this in production - otherwise you can lose production data.
             //  As an alternative to it, you can use CLI and run schema:sync command.
-            synchronize: testMode ? true : synchronizeOrNot,
-            dropSchema: testMode ? true : false,
+            synchronize,
+            dropSchema,
             logging: false,
         })
     }
@@ -47,6 +57,7 @@ export const AppDataSourceGenerator = (
     return datasource
 }
 
-export const AppDataSource = AppDataSourceGenerator(
-    TEST_MODE === "false" ? false : true
-)
+/**
+ * The singleton datasource for this NODE_ENV.
+ */
+export const AppDataSource = AppDataSourceGenerator()

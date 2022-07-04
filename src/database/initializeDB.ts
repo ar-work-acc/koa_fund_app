@@ -25,10 +25,10 @@ export const runDatabaseDataInitialization = async (
 
         let dataSource
         if (!testMode) {
-            dataSource = AppDataSourceGenerator(testMode)
+            dataSource = AppDataSourceGenerator()
             await dataSource.setOptions({ synchronize: true }).initialize()
         }
-        
+
         logger.debug(`Starting data initialization...`)
         const today = new Date()
         const yesterday = new Date()

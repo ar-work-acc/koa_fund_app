@@ -17,13 +17,7 @@ switch (process.env.NODE_ENV) {
         break
 }
 
-import {
-    NODE_ENV,
-    KOA_APP_KEY_0,
-    KOA_APP_KEY_1,
-    PORT,
-    TEST_MODE,
-} from "./config/index"
+import { NODE_ENV, KOA_APP_KEY_0, KOA_APP_KEY_1, PORT } from "./config/index"
 import { logger } from "./utils/logger"
 import { readFileSync } from "fs"
 import https from "https"
