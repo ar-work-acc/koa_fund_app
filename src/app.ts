@@ -8,12 +8,6 @@ switch (process.env.NODE_ENV) {
             path: path.join(__dirname, "../_dev.env"),
         })
         break
-    case "production":
-        console.log(`loading dotenv for prod...`)
-        dotenv.config({
-            path: path.join(__dirname, "../_prod.env"),
-        })
-        break
     case "test":
         console.log(`loading dotenv for test...`)
         dotenv.config({
