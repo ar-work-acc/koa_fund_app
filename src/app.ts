@@ -32,8 +32,12 @@ import { EmailQueue } from "./queue/bullmq"
 logger.debug(`check KOA keys: ${KOA_APP_KEY_0}, ${KOA_APP_KEY_1}`)
 
 /**
- * Koa.js app.
- *
+ * Koa.js app.  
+ * 
+ * Note: always import App first. 
+ * It reads from ".env" files and loads the correct environment variables as a side effect!
+ * NOT a good practice (just experimenting with .env files this time).
+ * 
  * const app = new App()
  * (await) app.start(useRedis, useHTTPS)
  */
@@ -122,7 +126,7 @@ export class App {
      * Start Koa server.
      * @param useRedis whether to use Redis or not, default = true
      * @param useHTTPS whether to use HTTPS or not, default = true
-     * @returns 
+     * @returns
      */
     public async start(useRedis: boolean = true, useHTTPS: boolean = true) {
         await this.initializeDatabaseConnections(useRedis)
