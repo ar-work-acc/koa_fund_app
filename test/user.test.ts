@@ -33,7 +33,7 @@ describe("APIs admin: users", () => {
             `[beforeAll] *** init Koa server and DB with supertest ***`
         )
         app = new App()
-        server = await app.start()
+        server = await app.start(false, false)
         await runDatabaseDataInitialization(true)
         agent = supertest.agent(server)
     }, 1 * 60 * 1000)

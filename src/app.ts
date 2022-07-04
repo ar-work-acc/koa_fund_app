@@ -35,7 +35,7 @@ logger.debug(`check KOA keys: ${KOA_APP_KEY_0}, ${KOA_APP_KEY_1}`)
  * Koa.js app.
  *
  * const app = new App()
- * (await) app.start()
+ * (await) app.start(useRedis, useHTTPS)
  */
 export class App {
     public app: Koa
@@ -57,7 +57,11 @@ export class App {
         })
     }
 
-    public async initializeDatabaseConnections() {
+    /**
+     * Initialize all database connections (PostgreSQL, Redis).
+     * @param useRedis whether to use Redis service or not, default = true
+     */
+    public async initializeDatabaseConnections(useRedis: boolean = true) {
         try {
             logger.debug(`Server connecting to PostgreSQL...`)
             await AppDataSource.initialize()
@@ -66,7 +70,7 @@ export class App {
             logger.error(`PostgreSQL connection error: ${error}`)
         }
 
-        if (TEST_MODE == "false") {
+        if (useRedis) {
             try {
                 // Redis, BullMQ:
                 logger.debug(`Server setting up queue with Redis...`)
@@ -78,11 +82,15 @@ export class App {
         }
     }
 
-    public async closeDatabaseConnections() {
+    /**
+     * Close all database connections (PostgreSQL, Redis).
+     * @param useRedis whether we need to shut down Redis service or not, default = true
+     */
+    public async closeDatabaseConnections(useRedis: boolean = true) {
         await AppDataSource.destroy()
         logger.debug(`PostgreSQL database connection closed by app.`)
 
-        if (TEST_MODE == "false") {
+        if (useRedis) {
             await this.queue.closeRedisConnections()
         }
     }
@@ -110,10 +118,16 @@ export class App {
         })
     }
 
-    public async start() {
-        await this.initializeDatabaseConnections()
+    /**
+     * Start Koa server.
+     * @param useRedis whether to use Redis or not, default = true
+     * @param useHTTPS whether to use HTTPS or not, default = true
+     * @returns 
+     */
+    public async start(useRedis: boolean = true, useHTTPS: boolean = true) {
+        await this.initializeDatabaseConnections(useRedis)
 
-        if (TEST_MODE === "false") {
+        if (useHTTPS) {
             return this.startSecureSever()
         } else {
             return this.startHTTPServer()
