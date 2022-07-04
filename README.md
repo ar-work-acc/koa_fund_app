@@ -6,6 +6,10 @@
 2. Should set ENV in Dockerfile instead.
 3. Scheduled jobs can be done in another system.
 
+## Development notes
+
+NODE_ENV should always be set as an environment variables, with values: "development", "production", "test". Each has its own PostgreSQL DB and Redis index (same Redis instance, different index).
+
 ## Code structure
 
 app_funds: React app

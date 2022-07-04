@@ -4,7 +4,6 @@ import { join } from "path"
 import { DataSource } from "typeorm"
 import {
     DB_NAME,
-    TEST_DB_NAME,
     DB_PASSWORD,
     NODE_ENV,
     DB_HOST,
@@ -30,7 +29,7 @@ export const AppDataSourceGenerator = (
             port: 5432,
             username: "postgres",
             password: DB_PASSWORD,
-            database: testMode ? TEST_DB_NAME : DB_NAME,
+            database: DB_NAME,
             entities: [
                 // join(__dirname, "../entities/User.ts"),
                 join(__dirname, "../entities/**/*{.js,.ts}"),
