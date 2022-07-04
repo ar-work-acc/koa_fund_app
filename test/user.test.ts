@@ -8,6 +8,7 @@ import { runDatabaseDataInitialization } from "../src/database/initializeDB"
 import range from "lodash/range"
 import Email from "../src/entities/Email"
 import { EmailQueue } from "../src/queue/bullmq"
+import { NODE_ENV, JWT_SECRET, DB_NAME, REDIS_URL } from "../src/config/index"
 
 describe("APIs admin: users", () => {
     let app: App
@@ -29,6 +30,9 @@ describe("APIs admin: users", () => {
     let fund2OrderAmount = 150
 
     beforeAll(async () => {
+        logger.debug(
+            `TEST: check, NODE_ENV: ${NODE_ENV}, JWT: ${JWT_SECRET}, DB_NAME: ${DB_NAME}, REDIS_URL: ${REDIS_URL}`
+        )
         logger.debug(
             `[beforeAll] *** init Koa server and DB with supertest ***`
         )

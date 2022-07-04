@@ -1,15 +1,4 @@
 import path from "path"
-import * as dotenv from "dotenv"
-
-switch (process.env.NODE_ENV) {
-    case "test":
-        console.log(`loading dotenv for test...`)
-        dotenv.config({
-            path: path.join(__dirname, "../_test.env"),
-        })
-        break
-}
-
 import { NODE_ENV, KOA_APP_KEY_0, KOA_APP_KEY_1, PORT } from "./config/index"
 import { logger } from "./utils/logger"
 import { readFileSync } from "fs"
