@@ -14,18 +14,27 @@ import Fund, { FundType } from "../entities/Fund"
 import SharePrice from "../entities/SharePrice"
 import Order, { OrderStatus } from "../entities/Order"
 
-// $ ts-node src/database/initializeDB.ts
+/**
+ * Run database data initialization.
+ *
+ * To use it directly as a script:
+ * $ ts-node src/database/initializeDB.ts
+ *
+ * @param isDatasourceInitialized if data source is already initialized or not
+ */
 export const runDatabaseDataInitialization = async (
-    testMode: boolean = false
+    isDatasourceInitialized: boolean
 ) => {
     try {
         logger.debug(
-            `Running database data initialization, test mode = ${testMode}`
+            `Running database data initialization, is data source already initialized? = ${isDatasourceInitialized}`
         )
 
         let dataSource
-        if (!testMode) {
+        if (!isDatasourceInitialized) {
+            // if datasource is not initialized, initialize it:
             dataSource = AppDataSourceGenerator()
+            // synchronize = true even if it's production!
             await dataSource.setOptions({ synchronize: true }).initialize()
         }
 
@@ -138,7 +147,8 @@ export const runDatabaseDataInitialization = async (
 
         logger.debug(`Done generating initial data!`)
 
-        if (!testMode) {
+        if (!isDatasourceInitialized) {
+            // need to destroy it since this is just a script for writing some data to DB:
             await dataSource?.destroy()
         }
     } catch (error) {
@@ -157,5 +167,5 @@ export const runDatabaseDataInitialization = async (
 if (require.main === module) {
     // called directly:
     logger.debug(`Initializing database directly as a script...`)
-    runDatabaseDataInitialization()
+    runDatabaseDataInitialization(false)
 }
