@@ -29,15 +29,13 @@ import { morgan, jwtErrorSuppressor } from "./middlewares/index"
 import { AppDataSource } from "./database/DataSource"
 import { EmailQueue } from "./queue/bullmq"
 
-logger.debug(`check KOA keys: ${KOA_APP_KEY_0}, ${KOA_APP_KEY_1}`)
-
 /**
- * Koa.js app.  
- * 
- * Note: always import App first. 
+ * Koa.js app.
+ *
+ * Note: always import App first.
  * It reads from ".env" files and loads the correct environment variables as a side effect!
  * NOT a good practice (just experimenting with .env files this time).
- * 
+ *
  * const app = new App()
  * (await) app.start(useRedis, useHTTPS)
  */

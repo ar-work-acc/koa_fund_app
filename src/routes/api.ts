@@ -17,7 +17,6 @@ import {
 import { createSharePrice, processOrders } from "../controllers/admin"
 import { adminOnly } from "../middlewares/admin"
 
-logger.debug(`check JWT secret: ${JWT_SECRET}`)
 // base router:
 const apiRouter = new Router()
 

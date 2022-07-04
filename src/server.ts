@@ -5,5 +5,7 @@ import { logger } from "./utils/logger"
 logger.debug(
     `Starting Koa server (server.ts), NODE_ENV = ${process.env.NODE_ENV}`
 )
+logger.debug(`environment variables: ${JSON.stringify(process.env)}`)
+
 const app = new App()
 app.start(true, true)
