@@ -3,12 +3,30 @@
 ## Notes for this demo
 
 1. Passwords, credentials and the like shouldn't be commited to Git.
-2. Should set ENV in Dockerfile instead.
-3. Scheduled jobs can be done in another system.
+2. Scheduled jobs can be done in another system.
 
 ## Development notes
 
-NODE_ENV should always be set as an environment variables, with values: "development", "production", "test". Each has its own PostgreSQL DB and Redis index (same Redis instance, different index).
+NODE_ENV should always be given a value: "development", "production", or "test". Each environment has its own PostgreSQL DB and Redis index (same Redis instance, different index).
+
+## Environment variables settings:
+
+1. Use dotenv for local development (development and test).
+2. Use Dockerfile ENV for production.
+
+dotenv test set up with Jest:  
+https://jestjs.io/docs/configuration#setupfiles-array
+
+```
+NODE_ENV=test DOTENV_CONFIG_PATH=./_test.env jest --setupFiles dotenv/config --runInBand --verbose
+```
+
+dotenv local development (nodemon.json):  
+https://nodejs.org/api/cli.html#-r---require-module
+
+```
+NODE_ENV=development DOTENV_CONFIG_PATH=./_dev.env npx ts-node -r dotenv/config --files src/server.ts
+```
 
 ## Code structure
 
@@ -53,7 +71,7 @@ To build the image:
 ```
 $ npm run clean
 $ npm run build
-$ npm run resetProdDB
+$ npm run resetProdDB (if you didn't start with a clean database)
 $ npm run docker
 ```
 
