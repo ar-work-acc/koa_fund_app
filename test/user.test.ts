@@ -33,6 +33,9 @@ describe("APIs admin: users", () => {
         logger.debug(
             `TEST: check, NODE_ENV: ${NODE_ENV}, JWT: ${JWT_SECRET}, DB_NAME: ${DB_NAME}, REDIS_URL: ${REDIS_URL}`
         )
+        expect(NODE_ENV).toBe("test")
+        expect(DB_NAME).toBe("app_funds_test")
+
         logger.debug(
             `[beforeAll] *** init Koa server and DB with supertest ***`
         )
