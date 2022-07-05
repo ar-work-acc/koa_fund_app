@@ -77,12 +77,18 @@ export const processOrders = async (ctx: Context, next: Next) => {
                 id: order.account.id,
             },
         })
+        if (account === null) {
+            throw new Error(`Order missing account info, order ID: ${order.id}`)
+        }
 
         const fund = await Fund.findOne({
             where: {
                 id: order.fund.id,
             },
         })
+        if (fund === null) {
+            throw new Error(`Order missing fund info, order ID: ${order.id}`)
+        }
 
         // find first share price of fund, where its date > order date:
         const sharePrice = await SharePrice.findOne({

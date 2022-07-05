@@ -2,11 +2,11 @@
  * Custom middlewares.
  */
 import { logger } from "../utils/logger"
-import { Context, Next } from "koa"
+import { Context, HttpError, Next } from "koa"
 
 /**
- * Morgan middleware.  
- * 
+ * Morgan middleware.
+ *
  * Should always be applied first to check the response time for a requested resource.
  * @param ctx
  * @param next
@@ -29,7 +29,7 @@ export const jwtErrorSuppressor = async (ctx: Context, next: Next) => {
     try {
         await next()
     } catch (err) {
-        if (401 == err.status) {
+        if (err instanceof HttpError && 401 == err.status) {
             logger.error(`401 Unauthorized: ${ctx.method} ${ctx.url}`)
             ctx.status = 401
             ctx.body = {

@@ -6,7 +6,7 @@ import { DB_NAME, DB_PASSWORD, NODE_ENV, DB_HOST } from "../config/index"
 import { logger } from "../utils/logger"
 
 // data source singleton:
-let datasource = null
+let datasource: DataSource | null = null
 
 /**
  * Use NODE_ENV to get the appropriate datasource.
@@ -31,6 +31,9 @@ export const AppDataSourceGenerator = (): DataSource => {
             dropSchema = true
             break
         default:
+            // default: don't sync, don't drop
+            synchronize = false
+            dropSchema = false
             break
     }
 

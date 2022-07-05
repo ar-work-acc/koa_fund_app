@@ -48,7 +48,7 @@ export const login = async (ctx: Context, next: Next) => {
             logger.debug(`User authenticated successfully!`)
 
             // remember not to send your password hash to user:
-            foundAccount.password = null
+            foundAccount.password = ""
 
             let token = jwt.sign(
                 {

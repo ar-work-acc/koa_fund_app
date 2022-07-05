@@ -23,7 +23,7 @@ import { EmailQueue } from "./queue/bullmq"
  */
 export class App {
     public app: Koa
-    private queue: EmailQueue
+    private queue: EmailQueue | null = null
 
     constructor() {
         this.app = new Koa()
@@ -75,7 +75,7 @@ export class App {
         logger.debug(`PostgreSQL database connection closed by app.`)
 
         if (useRedis) {
-            await this.queue.closeRedisConnections()
+            await this.queue?.closeRedisConnections()
         }
     }
 

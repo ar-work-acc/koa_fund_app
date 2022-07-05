@@ -37,5 +37,9 @@ export const getPageAndPageSize = (ctx: Context) => {
  */
 export const getAccount = async (ctx: Context) => {
     const accountId = ctx.state.user.data.id
-    return await Account.findOneBy({ id: accountId })
+    const account = await Account.findOneBy({ id: accountId })
+    if (account === null) {
+        throw new Error("Can not get account from context! (check JWT token)")
+    }
+    return account
 }

@@ -26,6 +26,10 @@ export const getExchangeRate = async (ctx: Context, next: Next) => {
         },
     })
 
+    if (target === null) {
+        throw new Error(`Can't find exchange rate for currency: ${currency}`)
+    }
+
     logger.debug(
         `Found ${target.currency} = ${target.rate}, date = ${target.date}`
     )
@@ -181,6 +185,13 @@ export const createOrder = async (ctx: Context, next: Next) => {
                 date: "DESC",
             },
         })
+
+        if (targetExchangeRate === null) {
+            throw new Error(
+                `Can not find exchange rate for currency: ${currency}`
+            )
+        }
+
         amountOrdered = amount / targetExchangeRate.rate
     }
     logger.debug(
@@ -189,6 +200,9 @@ export const createOrder = async (ctx: Context, next: Next) => {
 
     // now, get the fund so we can check what type it is (prepaid or not):
     const fund = await Fund.findOneBy({ id: fundId })
+    if (fund === null) {
+        throw new Error(`Cannot find fund for fund ID = ${fundId}`)
+    }
 
     switch (fund.type) {
         case FundType.NORMAL:
