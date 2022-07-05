@@ -85,6 +85,9 @@ describe("APIs admin: users", () => {
         // if you don't send the header, should be 401
         let response = await agent.get("/api/v1/user")
         expect(response.status).toBe(401)
+        expect(response.body.message).toBe(
+            "Protected resource, use Authorization header to get access"
+        )
 
         // get user data
         response = await agent
