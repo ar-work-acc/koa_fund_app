@@ -7,8 +7,6 @@ import { LOG_DIR, CONSOLE_LOG_LEVEL } from "../config/index"
 
 // logs dir
 const logDir: string = path.join(__dirname, "..", "..", LOG_DIR)
-console.log(`*** Log check directory: ${LOG_DIR}, app version = 1.1 ***`)
-
 if (!existsSync(logDir)) {
     mkdirSync(logDir)
 }
@@ -68,5 +66,7 @@ const stream = {
         logger.info(message.substring(0, message.lastIndexOf("\n")))
     },
 }
+
+logger.debug(`*** Log check directory: ${LOG_DIR}, app version = 1.1 ***`)
 
 export { logger, stream }

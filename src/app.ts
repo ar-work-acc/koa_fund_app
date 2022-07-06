@@ -37,7 +37,7 @@ export class App {
 
         // error handling:
         this.app.on("error", (err, ctx) => {
-            console.error("server error", err, ctx)
+            logger.error("Koa server error", err, ctx)
         })
     }
 

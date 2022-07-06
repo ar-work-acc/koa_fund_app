@@ -9,7 +9,7 @@ logger.debug(
 logger.debug(
     `server.ts: check, NODE_ENV: ${NODE_ENV}, JWT: ${JWT_SECRET}, DB_NAME: ${DB_NAME}, REDIS_URL: ${REDIS_URL}`
 )
-logger.debug(`environment variables: ${JSON.stringify(process.env)}`)
+// logger.debug(`environment variables: ${JSON.stringify(process.env)}`)
 
 const app = new App()
 app.start(true, true)
