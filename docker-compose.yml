@@ -14,7 +14,8 @@ services:
         networks:
             - backend
     postgres:
-        image: postgres:13.6-bullseye
+        build: ./_postgres
+        image: archvile/postgres
         container_name: postgres
         restart: always
         ports:
@@ -22,6 +23,7 @@ services:
         environment:
             POSTGRES_DB: app_funds_prod
             POSTGRES_PASSWORD: pw20220501
+            POSTGRES_MULTIPLE_DBS: app_funds,app_funds_test
         networks:
             - backend
     redis:
