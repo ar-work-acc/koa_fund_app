@@ -10,11 +10,12 @@ set -u
 # function to create database and grant POSTGRES_USER all privileges:
 create_database() {
 	local DB_NAME="$1"
-	echo "Creating DB_NAME: ${DB_NAME}..."
-	psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
+	echo "Creating database: ${DB_NAME}..."
+	psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --quiet <<-EOSQL
 	    CREATE DATABASE $DB_NAME;
 	    GRANT ALL PRIVILEGES ON DATABASE $DB_NAME TO $POSTGRES_USER;
 EOSQL
+    echo "Created database: ${DB_NAME}!"
 }
 
 # Usage (docker-compose.yml):
@@ -27,6 +28,7 @@ then
     do
 		create_database "$DB_NAME"
 	done
-	echo "Additional databases ${POSTGRES_MULTIPLE_DBS} created. Done!"
+	echo "Additional databases ${POSTGRES_MULTIPLE_DBS} created."
+    echo 'Done!'
     exit 0
 fi
