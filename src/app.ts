@@ -82,8 +82,8 @@ export class App {
     public startSecureSever() {
         // HTTPS server:
         const options = {
-            key: readFileSync(path.join(__dirname, "../_ssl/app.pem")),
-            cert: readFileSync(path.join(__dirname, "../_ssl/app.crt")),
+            key: readFileSync(path.join(__dirname, "../docker/node/app.pem")),
+            cert: readFileSync(path.join(__dirname, "../docker/node/app.crt")),
         }
         return https
             .createServer(options, this.app.callback())

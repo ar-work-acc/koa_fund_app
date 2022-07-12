@@ -17,7 +17,8 @@ COPY run.sh ./run.sh
 # frontend code:
 COPY tmp/_app ./_app
 # credentials for HTTPS
-COPY tmp/_ssl ./_ssl
+RUN mkdir -p docker/node
+COPY app.pem app.crt ./docker/node/
 # backend code:
 COPY tmp/dist ./dist
 
