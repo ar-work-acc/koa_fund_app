@@ -1,8 +1,9 @@
 // always import App first to load environment variables from .env files:
 import { App } from "./app"
-import { logger } from "./utils/logger"
+import { logging } from "./utils/logger"
 import { JWT_SECRET, DB_NAME, REDIS_URL, NODE_ENV } from "./config/index"
 
+const logger = logging(__filename)
 logger.debug(
     `Starting Koa server (server.ts), process.env.NODE_ENV = ${process.env.NODE_ENV}`
 )

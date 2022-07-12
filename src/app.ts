@@ -1,6 +1,6 @@
 import path from "path"
 import { NODE_ENV, KOA_APP_KEY_0, KOA_APP_KEY_1, PORT } from "./config/index"
-import { logger } from "./utils/logger"
+import { logging } from "./utils/logger"
 import { readFileSync } from "fs"
 import https from "https"
 import Koa from "koa"
@@ -10,6 +10,8 @@ import router from "./routes/base"
 import { morgan, jwtErrorSuppressor } from "./middlewares/index"
 import { AppDataSource } from "./database/DataSource"
 import { EmailQueue } from "./queue/bullmq"
+
+const logger = logging(__filename)
 
 /**
  * Koa.js app.

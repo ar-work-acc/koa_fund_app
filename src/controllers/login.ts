@@ -1,9 +1,11 @@
-import { logger } from "../utils/logger"
+import { logging } from "../utils/logger"
 import jwt from "jsonwebtoken"
 import { JWT_SECRET } from "../config"
 import { Context, Next } from "koa"
 import { compare } from "bcrypt"
 import Account from "../entities/Account"
+
+const logger = logging(__filename)
 
 /**
  * Returns user data if logged in; else 401.

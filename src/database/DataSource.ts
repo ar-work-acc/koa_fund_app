@@ -3,7 +3,9 @@ import "reflect-metadata" // TypeORM requirement
 import { join } from "path"
 import { DataSource } from "typeorm"
 import { DB_NAME, DB_PASSWORD, NODE_ENV, DB_HOST } from "../config/index"
-import { logger } from "../utils/logger"
+import { logging } from "../utils/logger"
+
+const logger = logging(__filename)
 
 // data source singleton:
 let datasource: DataSource | null = null

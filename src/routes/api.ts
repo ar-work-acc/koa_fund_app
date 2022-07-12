@@ -4,7 +4,7 @@
 import Router from "@koa/router"
 import jwtMiddleware from "koa-jwt"
 import { JWT_SECRET } from "../config"
-import { logger } from "../utils/logger"
+import { logging } from "../utils/logger"
 import { getLoginUser, login } from "../controllers/login"
 import {
     createOrder,
@@ -16,6 +16,8 @@ import {
 } from "../controllers/fund"
 import { createSharePrice, processOrders } from "../controllers/admin"
 import { adminOnly } from "../middlewares/admin"
+
+const logger = logging(__filename)
 
 // base router:
 const apiRouter = new Router()

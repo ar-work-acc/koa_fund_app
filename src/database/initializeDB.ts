@@ -1,12 +1,14 @@
 import { AppDataSourceGenerator } from "./DataSource"
 
 import bcrypt from "bcrypt"
-import { logger } from "../utils/logger"
+import { logging } from "../utils/logger"
 import Account from "../entities/Account"
 import ExchangeRate from "../entities/ExchangeRate"
 import Fund, { FundType } from "../entities/Fund"
 import SharePrice from "../entities/SharePrice"
 import Order, { OrderStatus } from "../entities/Order"
+
+const logger = logging(__filename)
 
 /**
  * Run database data initialization.

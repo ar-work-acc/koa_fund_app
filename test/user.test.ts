@@ -3,12 +3,14 @@ import { App } from "../src/app"
 import supertest from "supertest"
 import http from "http"
 
-import { logger } from "../src/utils/logger"
+import { logging } from "../src/utils/logger"
 import { runDatabaseDataInitialization } from "../src/database/initializeDB"
 import range from "lodash/range"
 import Email from "../src/entities/Email"
 import { EmailQueue } from "../src/queue/bullmq"
 import { NODE_ENV, JWT_SECRET, DB_NAME, REDIS_URL } from "../src/config/index"
+
+const logger = logging(__filename)
 
 describe("APIs admin: users", () => {
     let app: App

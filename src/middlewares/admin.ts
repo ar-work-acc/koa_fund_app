@@ -1,5 +1,7 @@
 import { Context, Next } from "koa"
-import { logger } from "../utils/logger"
+import { logging } from "../utils/logger"
+
+const logger = logging(__filename)
 
 /**
  * Allows access only if user is an administrator. If not, throw a 401.

@@ -1,6 +1,8 @@
 import { Context } from "koa"
 import Account from "../../entities/Account"
-import { logger } from "../../utils/logger"
+import { logging } from "../../utils/logger"
+
+const logger = logging(__filename)
 
 /**
  * Parses context for params page and page size.

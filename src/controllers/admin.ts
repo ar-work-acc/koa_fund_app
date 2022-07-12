@@ -3,13 +3,15 @@
  */
 import { Context, Next } from "koa"
 import Fund, { FundType } from "../entities/Fund"
-import { logger } from "../utils/logger"
+import { logging } from "../utils/logger"
 import Order, { OrderStatus } from "../entities/Order"
 import SharePrice from "../entities/SharePrice"
 import { MoreThan } from "typeorm"
 import Account from "../entities/Account"
 import { AppDataSource } from "../database/DataSource"
 import Email from "../entities/Email"
+
+const logger = logging(__filename)
 
 /**
  * Allows admin to create a new share price for fund.

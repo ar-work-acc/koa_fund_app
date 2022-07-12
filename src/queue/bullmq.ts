@@ -1,8 +1,10 @@
 import { Queue, Worker, QueueScheduler, Job } from "bullmq"
-import { logger } from "../utils/logger"
+import { logging } from "../utils/logger"
 import IORedis from "ioredis"
 import { REDIS_URL } from "../config"
 import Email from "../entities/Email"
+
+const logger = logging(__filename)
 
 /**
  * Process email sending tasks at scheduled times.
@@ -49,9 +51,7 @@ export class EmailQueue {
             { connection: this.connection }
         )
         this.worker.on("completed", (job) => {
-            logger.debug(
-                `${job.id} has completed! job data: ${job.data}`
-            )
+            logger.debug(`${job.id} has completed! job data: ${job.data}`)
         })
         this.worker.on("failed", (job, err) => {
             logger.debug(

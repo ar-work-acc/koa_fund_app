@@ -1,10 +1,12 @@
 import { Context, Next } from "koa"
 import ExchangeRate from "../entities/ExchangeRate"
 import Fund, { FundType } from "../entities/Fund"
-import { logger } from "../utils/logger"
+import { logging } from "../utils/logger"
 import { getAccount, getPageAndPageSize } from "./util/parser"
 import Order from "../entities/Order"
 import { AppDataSource } from "../database/DataSource"
+
+const logger = logging(__filename)
 
 /**
  * Get the latest exchange rate for a specific currency.
