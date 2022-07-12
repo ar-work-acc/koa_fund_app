@@ -94,3 +94,8 @@ $ redis-cli -a pw20220501 flushall
 5. More on Redis as a database.
 6. Swagger (optional).
 7. Jest, mock.
+
+## Other notes
+
+1. Winston: don't add line numbers because it would impact performance, as stated in:  
+   https://github.com/winstonjs/winston/issues/200
