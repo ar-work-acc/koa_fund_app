@@ -4,6 +4,7 @@
 
 1. Passwords, credentials and the like shouldn't be commited to Git.
 2. Scheduled jobs can be done in another system.
+3. Original requirements and sequence diagram: data/\*.pdf
 
 ## Development notes
 
@@ -47,11 +48,6 @@ src: Koa.js server code
 -   server.ts: main
 
 run.sh: production DB is initialized here; will run after wait-for-it.sh
-
-## Other notes
-
-Send JWT token back in authorization header:
-Authorization: "Bearer (token)"
 
 ## Run project
 
@@ -99,3 +95,6 @@ $ redis-cli -a pw20220501 flushall
 
 1. Winston: don't add line numbers because it would impact performance, as stated in:  
    https://github.com/winstonjs/winston/issues/200
+2. Send JWT token back in authorization header:  
+   Authorization: "Bearer (token)"  
+   https://swagger.io/docs/specification/authentication/bearer-authentication/
