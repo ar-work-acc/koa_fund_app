@@ -3,3 +3,4 @@ _app/
 coverage/
 dist/
 _logs/
+docker/node/tmp

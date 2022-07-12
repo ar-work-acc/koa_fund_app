@@ -6,20 +6,20 @@ LABEL description="Fund demo app"
 WORKDIR /usr/src/app
 
 # Install npm dependencies
-COPY package*.json ./
+COPY tmp/package*.json ./
 # RUN npm install (dev only)
 RUN npm ci --only=production
 
 # Copy code and stuff:
-# backend code:
-COPY dist ./dist
-# frontend code:
-COPY _app ./_app
-# credentials for HTTPS
-COPY _ssl ./_ssl
-
 COPY wait-for-it.sh ./wait-for-it.sh
 COPY run.sh ./run.sh
+
+# frontend code:
+COPY tmp/_app ./_app
+# credentials for HTTPS
+COPY tmp/_ssl ./_ssl
+# backend code:
+COPY tmp/dist ./dist
 
 # environment variables:
 ENV NODE_ENV=production
