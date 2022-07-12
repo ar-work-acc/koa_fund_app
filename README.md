@@ -84,3 +84,13 @@ Use this to remove previous records of tasks:
 ```
 $ redis-cli -a pw20220501 flushall
 ```
+
+## TODOs
+
+1. Multiple test databases for testing.
+2. Spring-like @Transactional middleware (or services).
+3. Use: "@/..." for imports; TS settings (optional).
+4. More on BullMQ (queues, important!).
+5. More on Redis as a database.
+6. Swagger (optional).
+7. Jest, mock.
