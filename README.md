@@ -7,7 +7,8 @@
 
 ## Development notes
 
-NODE_ENV should always be given a value: "development", "production", or "test". Each environment has its own PostgreSQL DB and Redis index (same Redis instance, different index).
+NODE_ENV should always be given a value: "development", "production", or "test".  
+Each environment has its own PostgreSQL DB and Redis index (same Redis instance, different index).
 
 ## Environment variables settings:
 
@@ -61,8 +62,6 @@ $ npm run resetdb
 $ npm run initdb
 $ npm run dev
 ```
-
-For local development, create database "app_funds" and "app_funds_test" first.
 
 ## Build for Docker
 
