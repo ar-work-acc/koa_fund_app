@@ -39,23 +39,26 @@ export const runDatabaseDataInitialization = async (
         const yesterday = new Date()
         yesterday.setDate(yesterday.getDate() - 1)
 
-        const usd = new ExchangeRate()
-        usd.currency = "usd"
-        usd.rate = 1
-        usd.date = yesterday
-        await usd.save()
+        // example of using insert syntax
+        await ExchangeRate.insert({
+            currency: "usd",
+            rate: 1,
+            date: yesterday,
+        })
 
-        const euro_yesterday = new ExchangeRate()
-        euro_yesterday.currency = "euro"
-        euro_yesterday.rate = 0.9
-        euro_yesterday.date = yesterday
-        await euro_yesterday.save()
-
-        const euro = new ExchangeRate()
-        euro.currency = "euro"
-        euro.rate = 0.95
-        euro.date = today
-        await euro.save()
+        // example of using insert syntax to create multiple entities at once
+        await ExchangeRate.insert([
+            {
+                currency: "euro",
+                rate: 0.9,
+                date: yesterday,
+            },
+            {
+                currency: "euro",
+                rate: 0.95,
+                date: today,
+            },
+        ])
 
         const ntd_yesterday = new ExchangeRate()
         ntd_yesterday.currency = "ntd"
