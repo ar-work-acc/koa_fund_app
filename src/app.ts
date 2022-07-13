@@ -33,7 +33,10 @@ export class App {
         this.app.keys = [KOA_APP_KEY_0, KOA_APP_KEY_1]
         this.app.use(morgan)
         this.app.use(jwtErrorSuppressor)
-        this.app.use(koaStatic(path.join(__dirname, "../_app")))
+        if (NODE_ENV !== "production") {
+            // production uses Nginx to serve static files, so this is not needed
+            this.app.use(koaStatic(path.join(__dirname, "../docker/node/tmp/_app")))
+        }
         this.app.use(bodyParser())
         this.app.use(router.routes()).use(router.allowedMethods())
 
