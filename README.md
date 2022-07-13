@@ -61,7 +61,7 @@ $ npm run dev
 
 ## Build for Docker
 
-To build the image:
+To build the image (just run compose.sh):
 
 ```
 $ npm run clean
