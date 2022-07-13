@@ -19,6 +19,7 @@ COPY tmp/_app ./_app
 # credentials for HTTPS
 RUN mkdir -p docker/node
 COPY app.pem app.crt ./docker/node/
+COPY cert.key cert.pem ./docker/node/
 # backend code:
 COPY tmp/dist ./dist
 

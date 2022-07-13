@@ -66,7 +66,8 @@ To build the image:
 ```
 $ npm run clean
 $ npm run build
-$ npm run resetProdDB (if you didn't start with a clean database)
+$ docker compose down (if you started docker previously)
+$ npm run dockerPrune
 $ npm run docker
 ```
 
@@ -98,3 +99,15 @@ $ redis-cli -a pw20220501 flushall
 2. Send JWT token back in authorization header:  
    Authorization: "Bearer (token)"  
    https://swagger.io/docs/specification/authentication/bearer-authentication/
+
+## HTTPS
+
+Generate a self-signed SSL certificate using OpenSSL:  
+https://www.openssl.org/docs/man1.0.2/man1/openssl-req.html
+
+```
+$ openssl req -x509 -newkey rsa:4096 -keyout cert.key -out cert.pem -sha256 -days 3650
+```
+
+Nginx settings:  
+https://nginx.org/en/docs/http/ngx_http_ssl_module.html
