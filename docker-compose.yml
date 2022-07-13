@@ -1,6 +1,25 @@
 version: "3.9"
 
 services:
+    nginx_node:
+        build: ./docker/nginx
+        image: archvile/nginx_node
+        container_name: nginx_node
+        depends_on:
+            - app_funds
+        deploy:
+            restart_policy:
+                condition: on-failure
+                delay: 5s
+                max_attempts: 3
+                window: 120s
+        ports:
+            - "8001:80"
+        volumes:
+            - static:/home/static
+            - ssh_keys:/home/ssh_keys
+        networks:
+            - backend
     app_funds:
         build: ./docker/node
         image: archvile/app_funds
@@ -11,6 +30,9 @@ services:
         restart: "no"
         ports:
             - 3333:3000
+        volumes:
+          - static:/usr/src/app/_app
+          - ssh_keys:/usr/src/app/docker/node
         networks:
             - backend
     postgres:
@@ -39,3 +61,7 @@ services:
 networks:
     backend:
         driver: bridge
+
+volumes:
+  static:
+  ssh_keys:
