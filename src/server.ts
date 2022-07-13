@@ -13,4 +13,9 @@ logger.debug(
 // logger.debug(`environment variables: ${JSON.stringify(process.env)}`)
 
 const app = new App()
-app.start(true, true)
+
+if (NODE_ENV === "production") {
+    app.start(true, false)
+} else {
+    app.start(true, true)
+}
