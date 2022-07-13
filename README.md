@@ -110,4 +110,6 @@ $ openssl req -x509 -newkey rsa:4096 -keyout cert.key -out cert.pem -sha256 -day
 ```
 
 Nginx settings:  
-https://nginx.org/en/docs/http/ngx_http_ssl_module.html
+https://nginx.org/en/docs/http/ngx_http_ssl_module.html  
+For a certificate with a password:  
+http://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_password_file  
