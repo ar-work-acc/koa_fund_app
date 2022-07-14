@@ -116,6 +116,8 @@ http://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_password_file
 
 ## Docker Swarm
 
+Swarm's routing mesh includes automatic load balancing (any IP will do).
+
 Set up VMs with Ubuntu Multipass first (3 nodes: node1/2/3):  
 https://multipass.run/docs/how-to-guides
 
