@@ -3,7 +3,7 @@ version: "3.9"
 services:
     nginx_node:
         build: ./docker/nginx
-        image: archvile/nginx_node
+        image: arworkacc/nginx_node
         container_name: nginx_node
         depends_on:
             - app_funds
@@ -15,9 +15,18 @@ services:
             - ssh_keys:/home/ssh_keys
         networks:
             - backend
+        deploy:
+          replicas: 3
+          update_config:
+            parallelism: 2
+          restart_policy:
+            condition: on-failure
+            delay: 5s
+            max_attempts: 3
+            window: 120s
     app_funds:
         build: ./docker/node
-        image: archvile/app_funds
+        image: arworkacc/app_funds
         container_name: app_funds
         depends_on:
             - postgres
@@ -28,9 +37,18 @@ services:
           - ssh_keys:/usr/src/app/docker/node
         networks:
             - backend
+        deploy:
+          replicas: 3
+          update_config:
+            parallelism: 2
+          restart_policy:
+            condition: on-failure
+            delay: 5s
+            max_attempts: 3
+            window: 120s            
     postgres:
         build: ./docker/postgres
-        image: archvile/postgres
+        image: arworkacc/postgres
         container_name: postgres
         restart: always
         ports:
@@ -41,6 +59,13 @@ services:
             POSTGRES_MULTIPLE_DBS: app_funds,app_funds_test
         networks:
             - backend
+        deploy:
+          replicas: 1
+          restart_policy:
+            condition: on-failure
+            delay: 5s
+            max_attempts: 1
+            window: 120s
     redis:
         image: redis:6.2.6-bullseye
         container_name: redis
@@ -50,10 +75,15 @@ services:
             - 6379:6379
         networks:
             - backend
-
+        deploy:
+          replicas: 1
+          restart_policy:
+            condition: on-failure
+            delay: 5s
+            max_attempts: 1
+            window: 120s
 networks:
     backend:
-        driver: bridge
 
 volumes:
   static:

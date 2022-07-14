@@ -61,7 +61,7 @@ $ npm run dev
 
 ## Build for Docker
 
-To build the image (just run compose.sh):
+To build the image (just run run-compose.sh):
 
 ```
 $ npm run clean
@@ -112,4 +112,14 @@ $ openssl req -x509 -newkey rsa:4096 -keyout cert.key -out cert.pem -sha256 -day
 Nginx settings:  
 https://nginx.org/en/docs/http/ngx_http_ssl_module.html  
 For a certificate with a password:  
-http://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_password_file  
+http://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_password_file
+
+## Docker Swarm
+
+Set up VMs with Ubuntu Multipass first:  
+https://multipass.run/docs/how-to-guides
+
+https://docs.docker.com/engine/swarm/stack-deploy/  
+https://docs.docker.com/compose/compose-file/compose-file-v3/  
+https://docs.docker.com/engine/reference/commandline/login/  
+https://docs.docker.com/engine/reference/commandline/compose_push/

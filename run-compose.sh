@@ -3,7 +3,7 @@
 # Script to clean and rebuild/run Docker compose:
 npm run clean
 npm run build
-docker compose down
+docker compose down --volumes
 npm run dockerPrune
 npm run docker
 
