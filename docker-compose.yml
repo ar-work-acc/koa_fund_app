@@ -16,7 +16,7 @@ services:
         networks:
             - backend
         deploy:
-            replicas: 3
+            replicas: 1
             update_config:
                 delay: 10s
                 parallelism: 2
@@ -39,7 +39,7 @@ services:
         networks:
             - backend
         deploy:
-            replicas: 3
+            replicas: 1
             update_config:
                 parallelism: 3
             restart_policy:
