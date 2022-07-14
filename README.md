@@ -116,10 +116,38 @@ http://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_password_file
 
 ## Docker Swarm
 
-Set up VMs with Ubuntu Multipass first:  
+Set up VMs with Ubuntu Multipass first (3 nodes: node1/2/3):  
 https://multipass.run/docs/how-to-guides
 
+```
+$ docker swarm join-token manager
+```
+
+Follow Docker's guide on how to do a stack deploy:  
 https://docs.docker.com/engine/swarm/stack-deploy/  
-https://docs.docker.com/compose/compose-file/compose-file-v3/  
+Compose file documentations (v3+):  
+https://docs.docker.com/compose/compose-file/compose-file-v3/
+
+Other documentation (login and push your images to DockerHub first):  
 https://docs.docker.com/engine/reference/commandline/login/  
 https://docs.docker.com/engine/reference/commandline/compose_push/
+
+Don't specify the network type, it will choose the correct one.
+
+Checking the result:
+
+```
+$ multipass shell node1
+```
+
+```
+ubuntu@node1:~$ docker stack services koa_fund_app
+```
+
+To get the IP:
+
+```
+$ multipass ls
+```
+
+Remember to use HTTPS on URL: e.g., https://<node IP>:8001/

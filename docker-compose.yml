@@ -16,14 +16,15 @@ services:
         networks:
             - backend
         deploy:
-          replicas: 3
-          update_config:
-            parallelism: 2
-          restart_policy:
-            condition: on-failure
-            delay: 5s
-            max_attempts: 3
-            window: 120s
+            replicas: 3
+            update_config:
+                delay: 10s
+                parallelism: 2
+            restart_policy:
+                condition: on-failure
+                delay: 5s
+                max_attempts: 3
+                window: 120s
     app_funds:
         build: ./docker/node
         image: arworkacc/app_funds
@@ -33,19 +34,19 @@ services:
             - redis
         restart: "no"
         volumes:
-          - static:/usr/src/app/_app
-          - ssh_keys:/usr/src/app/docker/node
+            - static:/usr/src/app/_app
+            - ssh_keys:/usr/src/app/docker/node
         networks:
             - backend
         deploy:
-          replicas: 3
-          update_config:
-            parallelism: 2
-          restart_policy:
-            condition: on-failure
-            delay: 5s
-            max_attempts: 3
-            window: 120s            
+            replicas: 3
+            update_config:
+                parallelism: 3
+            restart_policy:
+                condition: on-failure
+                delay: 5s
+                max_attempts: 3
+                window: 120s
     postgres:
         build: ./docker/postgres
         image: arworkacc/postgres
@@ -60,12 +61,12 @@ services:
         networks:
             - backend
         deploy:
-          replicas: 1
-          restart_policy:
-            condition: on-failure
-            delay: 5s
-            max_attempts: 1
-            window: 120s
+            replicas: 1
+            restart_policy:
+                condition: on-failure
+                delay: 5s
+                max_attempts: 1
+                window: 120s
     redis:
         image: redis:6.2.6-bullseye
         container_name: redis
@@ -76,15 +77,15 @@ services:
         networks:
             - backend
         deploy:
-          replicas: 1
-          restart_policy:
-            condition: on-failure
-            delay: 5s
-            max_attempts: 1
-            window: 120s
+            replicas: 1
+            restart_policy:
+                condition: on-failure
+                delay: 5s
+                max_attempts: 1
+                window: 120s
 networks:
     backend:
 
 volumes:
-  static:
-  ssh_keys:
+    static:
+    ssh_keys:
