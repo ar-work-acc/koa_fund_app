@@ -61,7 +61,14 @@ $ npm run dev
 
 ## Build for Docker
 
-To build the image (just run run-docker-compose.sh):
+Use the script:
+
+```
+$ ./run-docker-compose.sh -f (full)
+$ ./run-docker-compose.sh -d (re-deploy Docker only)
+```
+
+Or run with npm commands:
 
 ```
 $ npm run clean
@@ -88,9 +95,9 @@ $ redis-cli -a pw20220501 flushall
 2. Spring-like @Transactional middleware (or services).
 3. Use: "@/..." for imports; TS settings (optional).
 4. More on BullMQ (queues, important!).
-5. More on Redis as a database.
-6. Swagger (optional).
-7. Jest, mock.
+5. More on Redis as a database (quicker read/writes).
+6. Swagger (optional, API documentation).
+7. Jest (mock).
 
 ## Other notes
 
@@ -111,14 +118,14 @@ $ openssl req -x509 -newkey rsa:4096 -keyout cert.key -out cert.pem -sha256 -day
 
 Nginx settings:  
 https://nginx.org/en/docs/http/ngx_http_ssl_module.html  
-For a certificate with a password:  
+For a certificate with a password (password set to "louis"):  
 http://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_password_file
 
 ## Docker Swarm
 
 Swarm's routing mesh includes automatic load balancing (any IP will do).
 
-Set up VMs with Ubuntu Multipass first (3 nodes: node1/2/3):  
+Set up VMs with Ubuntu Multipass first (3 nodes: node1, node2, node3):  
 https://multipass.run/docs/how-to-guides
 
 ```
@@ -126,7 +133,8 @@ $ docker swarm join-token manager
 ```
 
 Follow Docker's guide on how to do a stack deploy:  
-https://docs.docker.com/engine/swarm/stack-deploy/  
+https://docs.docker.com/engine/swarm/stack-deploy/
+
 Compose file documentations (v3+):  
 https://docs.docker.com/compose/compose-file/compose-file-v3/
 
@@ -134,7 +142,7 @@ Other documentation (login and push your images to DockerHub first):
 https://docs.docker.com/engine/reference/commandline/login/  
 https://docs.docker.com/engine/reference/commandline/compose_push/
 
-Don't specify the network type, it will choose the correct one.
+Don't specify Docker network type, it will choose the correct one.
 
 Checking the result:
 
