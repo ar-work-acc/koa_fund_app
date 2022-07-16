@@ -43,7 +43,7 @@ export const TopNavbar = ({ setJwt }) => {
                 {`${account.firstName} ${account.lastName};`}{" "}
                 <b>your balance</b>:{" "}
                 {`${parseFloat(account.balance).toFixed(2) / 1}`}
-                {account.isAgreementSigned ? "(agreement signed)" : ""}
+                {account.isAgreementSigned ? " (agreement signed)" : ""}
             </span>
         )
     }
