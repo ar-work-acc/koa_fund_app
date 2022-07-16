@@ -12,16 +12,16 @@ if (!existsSync(logDir)) {
 }
 
 /**
- * Create a logger. By default you pass __filename to get a logger for that module:  
- * const logger = logging(__filename)  
- * 
- * Or use:  
- * const logger = logging(tag, false)  
- * with a custom tag  
- * 
+ * Create a logger. By default you pass __filename to get a logger for that module:
+ * const logger = logging(__filename)
+ *
+ * Or use:
+ * const logger = logging(tag, false)
+ * with a custom tag
+ *
  * @param tag __filename or custom tag
  * @param isFileName default is true, with strips down file name with src as base; pass false if you want to use a custom tag name
- * @returns 
+ * @returns
  */
 const logging = (tag: string, isFileName: boolean = true) => {
     if (isFileName) {
@@ -60,7 +60,9 @@ const logging = (tag: string, isFileName: boolean = true) => {
                 dirname: logDir + "/error", // log file /logs/error/*.log in save
                 filename: `%DATE%.log`,
                 maxFiles: 30, // 30 Days saved
-                handleExceptions: true,
+                // will cause a leak: "Possible EventEmitter memory leak detected."; enable when needed
+                // probably because there are so many different loggers
+                // handleExceptions: true,
                 json: false,
                 zippedArchive: true,
             }),

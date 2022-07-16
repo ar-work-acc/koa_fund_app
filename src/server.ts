@@ -12,6 +12,12 @@ logger.debug(
 )
 // logger.debug(`environment variables: ${JSON.stringify(process.env)}`)
 
+process.on("warning", (warning) => {
+    console.warn(warning.name) // Print the warning name
+    console.warn(warning.message) // Print the warning message
+    console.warn(warning.stack) // Print the stack trace
+})
+
 const app = new App()
 
 if (NODE_ENV === "production") {

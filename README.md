@@ -188,3 +188,7 @@ Other related commands:
 -   docker info | grep Name
 -   docker stack ps <name>
 -   docker stack services <name>
+
+## Winston logging
+
+1. handleExceptions: true (enable when needed; too many handlers will cause a warning to be reported)
