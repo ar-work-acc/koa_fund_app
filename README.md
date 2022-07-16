@@ -41,11 +41,14 @@ src: Koa.js server code
 -   database: DB settings
 -   entities: ORM entries
 -   middlewares
--   migrations
+-   migrations: TypeORM migration files
+-   queue: BullMQ related
 -   routes: API routes
--   utils
--   app.ts
--   server.ts: main
+-   services: for more complex logic
+-   types: additional TypeScript types declarations
+-   utils: logger, etc.
+-   app.ts: Koa app
+-   server.ts: main entry
 
 run.sh: production DB is initialized here; will run after wait-for-it.sh
 
@@ -55,7 +58,7 @@ Local (with TypeScript, use nodemon):
 
 ```
 $ npm run resetdb
-$ npm run initdb
+$ npm run initdb (initialize DB with data)
 $ npm run dev
 ```
 
@@ -78,8 +81,12 @@ $ npm run dockerPrune
 $ npm run docker
 ```
 
-Access app at: https://localhost:3333/  
-account, password = louis_huang, 111; alice, 222
+Access app at: https://localhost:3333/
+
+account, password:
+
+-   louis_huang, 111
+-   alice, 222
 
 ## BullMQ (queue with Redis)
 
@@ -91,7 +98,7 @@ $ redis-cli -a pw20220501 flushall
 
 ## TODOs
 
-1. Multiple test databases for testing.
+1. Multiple test databases (Redis indicies) for testing.
 2. Spring-like @Transactional middleware (or services).
 3. Use: "@/..." for imports; TS settings (optional).
 4. More on BullMQ (queues, important!).
@@ -128,23 +135,33 @@ Swarm's routing mesh includes automatic load balancing (any IP will do).
 Set up VMs with Ubuntu Multipass first (3 nodes: node1, node2, node3):  
 https://multipass.run/docs/how-to-guides
 
+After installing Multipass, run the script to create the Swarm:
+
 ```
-$ docker swarm join-token manager
+$ ./run-create-swarm.sh
+```
+
+Then deploy your app to Swarm:
+
+```
+$ ./run-docker-swarm.sh
 ```
 
 Follow Docker's guide on how to do a stack deploy:  
 https://docs.docker.com/engine/swarm/stack-deploy/
 
 Compose file documentations (v3+):  
-https://docs.docker.com/compose/compose-file/compose-file-v3/
+https://docs.docker.com/compose/compose-file/compose-file-v3/  
+About replicas settings (works on both compose and swarm by default):  
+https://docs.docker.com/compose/compose-file/deploy/#replicas
 
 Other documentation (login and push your images to DockerHub first):  
 https://docs.docker.com/engine/reference/commandline/login/  
 https://docs.docker.com/engine/reference/commandline/compose_push/
 
-Don't specify Docker network type, it will choose the correct one.
+Don't specify Docker network type; it will choose the correct one.
 
-Checking the result:
+To check the result:
 
 ```
 $ multipass shell node1
@@ -161,3 +178,13 @@ $ multipass ls
 ```
 
 Remember to use HTTPS on URL: e.g., https://<node IP>:8001/
+
+Other related commands:
+
+-   docker swarm
+-   docker node ps -h
+-   docker service ps <name>
+-   docker service logs -f <name>
+-   docker info | grep Name
+-   docker stack ps <name>
+-   docker stack services <name>

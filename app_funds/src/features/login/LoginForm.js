@@ -36,6 +36,7 @@ export const LoginForm = ({ setJwt }) => {
         <div className="row">
             <form className="w-50 mx-auto">
                 <h2>{error === undefined ? "" : error.data}</h2>
+                <h2 className="mb-4">Mutual Fund App</h2>
                 <div className="mb-3">
                     <label htmlFor="username" className="form-label">
                         Account
@@ -50,7 +51,7 @@ export const LoginForm = ({ setJwt }) => {
                         onChange={onUserNameChanged}
                     />
                     <div id="emailHelp" className="form-text">
-                        Log in with your company's email-account
+                        Log in with your bank account
                     </div>
                 </div>
                 <div className="mb-3">

@@ -28,8 +28,20 @@ done
 if [[ $REBUILD = 1 ]]
 then
     echo 'Re-build JS/TS source code...'
-    npm run clean
-    npm run build
+    echo 'Cleaning...'
+    rm -r docker/node/tmp/_app 
+    rm -r docker/node/tmp/dist
+    rm docker/node/tmp/package*.json
+    echo 'Cleaning done!'
+    
+    echo 'Building...'
+    npm install
+    npx tsc
+    npm install --prefix app_funds
+    npm run build --prefix app_funds
+    cp -r app_funds/build ./docker/node/tmp/_app
+    cp package*.json ./docker/node/tmp/
+    echo 'Building done!'
 fi
 
 echo 'Re-deploy with Docker compose...'
