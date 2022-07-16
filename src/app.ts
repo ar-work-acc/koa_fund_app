@@ -7,9 +7,10 @@ import Koa from "koa"
 import koaStatic from "koa-static"
 import bodyParser from "koa-bodyparser"
 import router from "./routes/base"
-import { morgan, jwtErrorSuppressor } from "./middlewares/index"
+import { jwtErrorSuppressor } from "./middlewares/index"
 import { AppDataSource } from "./database/DataSource"
 import { EmailQueue } from "./queue/bullmq"
+import { morgan } from "./middlewares/morgan"
 
 const logger = logging(__filename)
 
@@ -31,7 +32,12 @@ export class App {
         this.app = new Koa()
 
         this.app.keys = [KOA_APP_KEY_0, KOA_APP_KEY_1]
-        this.app.use(morgan)
+        this.app.use(
+            morgan((msg: string) => {
+                const logger = logging("morgan", false)
+                logger.info(msg)
+            })
+        )
         this.app.use(jwtErrorSuppressor)
         if (NODE_ENV !== "production") {
             // production uses Nginx to serve static files, so this is not needed

@@ -7,34 +7,6 @@ import { Context, HttpError, Next } from "koa"
 const logger = logging("middleware", false)
 
 /**
- * Koa logger middleware: Morgan "dev" format.
- * @param ctx
- * @param next
- */
-export const morgan = async (ctx: Context, next: Next) => {
-    const start = Date.now()
-    await next()
-    const ms = Date.now() - start
-
-    // get status color
-    let color =
-        ctx.status >= 500
-            ? 31 // red
-            : ctx.status >= 400
-            ? 33 // yellow
-            : ctx.status >= 300
-            ? 36 // cyan
-            : ctx.status >= 200
-            ? 32 // green
-            : 0 // no color
-
-    // format => :method :url :status :response-time ms - :res[content-length] bytes
-    logger.debug(
-        `${ctx.method} ${ctx.url} \x1b[${color}m${ctx.status}\x1b[0m ${ms}ms - ${ctx.length}`
-    )
-}
-
-/**
  * Middleware to suppress JWT exceptions.
  *
  * @param ctx
