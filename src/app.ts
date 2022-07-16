@@ -32,12 +32,7 @@ export class App {
         this.app = new Koa()
 
         this.app.keys = [KOA_APP_KEY_0, KOA_APP_KEY_1]
-        this.app.use(
-            morgan((msg: string) => {
-                const logger = logging("morgan", false)
-                logger.info(msg)
-            })
-        )
+        this.app.use(morgan(logging("morgan", false).info))
         this.app.use(jwtErrorSuppressor)
         if (NODE_ENV !== "production") {
             // production uses Nginx to serve static files, so this is not needed
