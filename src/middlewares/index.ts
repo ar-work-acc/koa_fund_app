@@ -3,22 +3,37 @@
  */
 import { logging } from "../utils/logger"
 import { Context, HttpError, Next } from "koa"
+import originalMorgan from "morgan"
 
 const logger = logging("middleware", false)
 
 /**
- * Morgan middleware.
+ * Koa wrapper for original Express morgan middleware.
  *
- * Should always be applied first to check the response time for a requested resource.
  * @param ctx
  * @param next
  */
-export const morgan = async (ctx: Context, next: Next) => {
-    const start = Date.now()
+export const koaMorgan = async (ctx: Context, next: Next) => {
+    const morganLogger = logging("morgan", false)
+    // "dev" format:
+    // :method :url :status :response-time ms - :res[content-length] bytes
+    const fn = originalMorgan("dev", {
+        stream: {
+            write: (message: string) => {
+                morganLogger.info(
+                    message.substring(0, message.lastIndexOf("\n")) + " bytes"
+                )
+            },
+        },
+    })
+
+    fn(ctx.req, ctx.res, (err) => {
+        if (err) {
+            morganLogger.error(`A logging error occurred: ${err}`)
+        }
+    })
+
     await next()
-    const ms = Date.now() - start
-    ctx.set("X-Response-Time", `${ms}ms`)
-    logger.debug(`${ctx.method} ${ctx.url} - ${ms}ms`)
 }
 
 /**
