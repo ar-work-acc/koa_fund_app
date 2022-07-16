@@ -3,37 +3,35 @@
  */
 import { logging } from "../utils/logger"
 import { Context, HttpError, Next } from "koa"
-import originalMorgan from "morgan"
 
 const logger = logging("middleware", false)
 
 /**
- * Koa wrapper for original Express morgan middleware.
- *
+ * Koa logger middleware: Morgan "dev" format.
  * @param ctx
  * @param next
  */
-export const koaMorgan = async (ctx: Context, next: Next) => {
-    const morganLogger = logging("morgan", false)
-    // "dev" format:
-    // :method :url :status :response-time ms - :res[content-length] bytes
-    const fn = originalMorgan("dev", {
-        stream: {
-            write: (message: string) => {
-                morganLogger.info(
-                    message.substring(0, message.lastIndexOf("\n")) + " bytes"
-                )
-            },
-        },
-    })
-
-    fn(ctx.req, ctx.res, (err) => {
-        if (err) {
-            morganLogger.error(`A logging error occurred: ${err}`)
-        }
-    })
-
+export const morgan = async (ctx: Context, next: Next) => {
+    const start = Date.now()
     await next()
+    const ms = Date.now() - start
+
+    // get status color
+    let color =
+        ctx.status >= 500
+            ? 31 // red
+            : ctx.status >= 400
+            ? 33 // yellow
+            : ctx.status >= 300
+            ? 36 // cyan
+            : ctx.status >= 200
+            ? 32 // green
+            : 0 // no color
+
+    // format => :method :url :status :response-time ms - :res[content-length] bytes
+    logger.debug(
+        `${ctx.method} ${ctx.url} \x1b[${color}m${ctx.status}\x1b[0m ${ms}ms - ${ctx.length}`
+    )
 }
 
 /**

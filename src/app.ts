@@ -7,7 +7,7 @@ import Koa from "koa"
 import koaStatic from "koa-static"
 import bodyParser from "koa-bodyparser"
 import router from "./routes/base"
-import { koaMorgan, jwtErrorSuppressor } from "./middlewares/index"
+import { morgan, jwtErrorSuppressor } from "./middlewares/index"
 import { AppDataSource } from "./database/DataSource"
 import { EmailQueue } from "./queue/bullmq"
 
@@ -31,7 +31,7 @@ export class App {
         this.app = new Koa()
 
         this.app.keys = [KOA_APP_KEY_0, KOA_APP_KEY_1]
-        this.app.use(koaMorgan)
+        this.app.use(morgan)
         this.app.use(jwtErrorSuppressor)
         if (NODE_ENV !== "production") {
             // production uses Nginx to serve static files, so this is not needed
