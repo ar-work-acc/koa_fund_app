@@ -12,19 +12,26 @@ if (!existsSync(logDir)) {
 }
 
 /**
- * logging: create loggers for each module
- * const logger = logging(__filename)
- *
- * error: 0, warn: 1, info: 2, http: 3, verbose: 4, debug: 5, silly: 6
+ * Create a logger. By default you pass __filename to get a logger for that module:  
+ * const logger = logging(__filename)  
+ * 
+ * Or use:  
+ * const logger = logging(tag, false)  
+ * with a custom tag  
+ * 
+ * @param tag __filename or custom tag
+ * @param isFileName default is true, with strips down file name with src as base; pass false if you want to use a custom tag name
+ * @returns 
  */
-const logging = (filename: string) => {
+const logging = (tag: string, isFileName: boolean = true) => {
+    if (isFileName) {
+        tag = path.relative(cwd(), tag)
+    }
+
     // add file name info to log format:
     const logFormat = winston.format.printf(
         ({ timestamp, level, message }) =>
-            `${timestamp} ${level} [${path.relative(
-                cwd(),
-                filename
-            )}]: ${message}`
+            `${timestamp} ${level} [${tag}]: ${message}`
     )
 
     const logger = winston.createLogger({
@@ -34,6 +41,7 @@ const logging = (filename: string) => {
             }),
             logFormat
         ),
+        // log level => error: 0, warn: 1, info: 2, http: 3, verbose: 4, debug: 5, silly: 6
         transports: [
             // daily file debug log settings:
             new winstonDaily({

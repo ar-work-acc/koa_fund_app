@@ -4,7 +4,7 @@
 import { logging } from "../utils/logger"
 import { Context, HttpError, Next } from "koa"
 
-const logger = logging(__filename)
+const logger = logging("middleware", false)
 
 /**
  * Morgan middleware.
