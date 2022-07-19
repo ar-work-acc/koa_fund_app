@@ -23,6 +23,7 @@
     "license": "ISC",
     "dependencies": {
         "@koa/router": "^10.1.1",
+        "@ts-koa/koa-morgan": "^0.0.3",
         "bcrypt": "^5.0.1",
         "bullmq": "^1.86.4",
         "dotenv": "^16.0.1",
