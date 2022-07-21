@@ -18,7 +18,7 @@
     "resetProdDB": "psql postgresql://postgres:pw20220501@localhost:5432/app_funds_prod -c 'drop schema public cascade; create schema public;'",
     "initProdDB": "node dist/database/initializeDB.js",
     "flushRedis": "redis-cli -a pw20220501 flushall",
-    "lint": "npx eslint src"
+    "lint": "npx eslint src test"
   },
   "author": "",
   "license": "ISC",

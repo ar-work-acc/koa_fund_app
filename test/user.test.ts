@@ -25,11 +25,11 @@ describe("APIs admin: users", () => {
 
   let fund1OrderId: number
   let fund1TradingFee: number
-  let fund1OrderAmount = 200
+  const fund1OrderAmount = 200
 
   let fund2OrderId: number
   let fund2TradingFee: number
-  let fund2OrderAmount = 150
+  const fund2OrderAmount = 150
 
   beforeAll(async () => {
     logger.debug(
@@ -165,7 +165,7 @@ describe("APIs admin: users", () => {
   })
 
   test("get orders", async () => {
-    let response = await agent
+    const response = await agent
       .get("/api/v1/orders")
       .set("Authorization", authorizationHeaderAdmin)
       .query({ page: 1, pageSize: 10 })
@@ -175,7 +175,7 @@ describe("APIs admin: users", () => {
   })
 
   test("place order: user did not sign agreement", async () => {
-    let response = await agent
+    const response = await agent
       .post("/api/v1/orders")
       .send({
         fundId: 2,
@@ -293,7 +293,7 @@ describe("APIs admin: users", () => {
   })
 
   test("admin: process orders, but the orders are not updated since there's no new share prices", async () => {
-    let response = await agent
+    const response = await agent
       .post("/api/v1/admin/processOrders")
       .set("Authorization", authorizationHeaderAdmin)
     expect(response.status).toBe(200)
@@ -558,7 +558,7 @@ describe("APIs admin: users", () => {
   })
 
   test("non-admin should not be able to add share price", async () => {
-    let response = await agent
+    const response = await agent
       .post("/api/v1/admin/createSharePrice")
       .set("Authorization", authorizationHeaderUser)
       .send({
@@ -569,7 +569,7 @@ describe("APIs admin: users", () => {
   })
 
   test("get fund list with wrong params: page, pageSize", async () => {
-    let response = await agent
+    const response = await agent
       .get("/api/v1/funds")
       .set("Authorization", authorizationHeaderAdmin)
       .query({ page: "x", pageSize: "y" })
@@ -583,7 +583,7 @@ describe("APIs admin: users", () => {
   })
 
   test("order fund 1 without enough balance", async () => {
-    let response = await agent
+    const response = await agent
       .post("/api/v1/orders")
       .send({
         fundId: 1,
