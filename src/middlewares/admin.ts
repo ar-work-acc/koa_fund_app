@@ -10,12 +10,12 @@ const logger = logging(__filename)
  * @param next
  */
 export const adminOnly = async (ctx: Context, next: Next) => {
-    const isAdmin: boolean = ctx.state.user.data.isAdmin
-    logger.debug(`isAdmin: ${isAdmin}`)
+  const isAdmin: boolean = ctx.state.user.data.isAdmin
+  logger.debug(`isAdmin: ${isAdmin}`)
 
-    if (!isAdmin) {
-        ctx.throw(401, "access_denied", { user: ctx.state.user.data })
-    }
+  if (!isAdmin) {
+    ctx.throw(401, "access_denied", { user: ctx.state.user.data })
+  }
 
-    await next()
+  await next()
 }

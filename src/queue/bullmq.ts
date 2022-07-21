@@ -10,102 +10,102 @@ const logger = logging(__filename)
  * Process email sending tasks at scheduled times.
  */
 export class EmailQueue {
-    public QUEUE_NAME = "processOrdersAndSendEmail"
+  public QUEUE_NAME = "processOrdersAndSendEmail"
 
-    public queue: Queue
-    public worker: Worker
-    public queueScheduler: QueueScheduler
-    public connection: IORedis.Redis
+  public queue: Queue
+  public worker: Worker
+  public queueScheduler: QueueScheduler
+  public connection: IORedis.Redis
 
-    constructor() {
-        logger.debug(`Initializing connection to Redis: ${REDIS_URL}`)
-        // get a Redis connection:
-        this.connection = new IORedis(REDIS_URL, {
-            maxRetriesPerRequest: null,
-        })
+  constructor() {
+    logger.debug(`Initializing connection to Redis: ${REDIS_URL}`)
+    // get a Redis connection:
+    this.connection = new IORedis(REDIS_URL, {
+      maxRetriesPerRequest: null,
+    })
 
-        // create queue scheduler, queue, and works with connections:
-        // queue scheduler:
-        this.queueScheduler = new QueueScheduler(this.QUEUE_NAME, {
-            connection: this.connection,
-        })
+    // create queue scheduler, queue, and works with connections:
+    // queue scheduler:
+    this.queueScheduler = new QueueScheduler(this.QUEUE_NAME, {
+      connection: this.connection,
+    })
 
-        // queue:
-        this.queue = new Queue(this.QUEUE_NAME, { connection: this.connection })
+    // queue:
+    this.queue = new Queue(this.QUEUE_NAME, { connection: this.connection })
 
-        // worker:
-        this.worker = new Worker(
-            this.QUEUE_NAME,
-            async (job: Job) => {
-                const jobInfo = `job name: ${
-                    job.name
-                }, job data = ${JSON.stringify(job.data)}`
+    // worker:
+    this.worker = new Worker(
+      this.QUEUE_NAME,
+      async (job: Job) => {
+        const jobInfo = `job name: ${job.name}, job data = ${JSON.stringify(
+          job.data
+        )}`
 
-                if (job.data == "cron") {
-                    logger.debug(`*** Processing email, ${jobInfo} ***`)
-                    EmailQueue.processAndSendEmails()
-                } else {
-                    logger.debug(`*** Doing nothing, ${jobInfo} ***`)
-                }
-            },
-            { connection: this.connection }
-        )
-        this.worker.on("completed", (job) => {
-            logger.debug(`${job.id} has completed! job data: ${job.data}`)
-        })
-        this.worker.on("failed", (job, err) => {
-            logger.debug(
-                `${job.id} has failed with ${err.message}, job data: ${job.data}`
-            )
-        })
-    }
-
-    /**
-     * Process and send emails. For cron.
-     */
-    public static async processAndSendEmails() {
-        // update entry status and send email here:
-        const [emails, count] = await Email.findAndCount({
-            skip: 0,
-            take: 10,
-            where: {
-                isProcessed: false,
-            },
-        })
-
-        logger.debug(
-            `A total of ${count} emails are not processed (process at most 10)`
-        )
-        for (const email of emails) {
-            email.isProcessed = true
-            await email.save()
-            // TODO email should be sent to users here, but this is just a demo
-            logger.info(
-                `*** Sending email to ${email.email}, order ID = ${email.orderId}, isSuccess = ${email.isSuccess} ***`
-            )
+        if (job.data == "cron") {
+          logger.debug(`*** Processing email, ${jobInfo} ***`)
+          EmailQueue.processAndSendEmails()
+        } else {
+          logger.debug(`*** Doing nothing, ${jobInfo} ***`)
         }
-    }
+      },
+      { connection: this.connection }
+    )
+    this.worker.on("completed", (job) => {
+      logger.debug(`${job.id} has completed! job data: ${job.data}`)
+    })
+    this.worker.on("failed", (job, err) => {
+      logger.debug(
+        `${job.id} has failed with ${err.message}, job data: ${job.data}`
+      )
+    })
+  }
 
-    /**
-     * Set up cron task to check and process emails regularly.
-     */
-    public async initializeRepeatableJob() {
-        await this.queue.add("cron-check-orders-send-email", "cron", {
-            repeat: {
-                // cron: '* 15 3 * * *', // Repeat job once every day at 3:15 (am)
-                cron: "0 */2 * * * *", // demo, every 2 minutes
-            },
-        })
-    }
+  /**
+   * Process and send emails. For cron.
+   */
+  public static async processAndSendEmails() {
+    // update entry status and send email here:
+    const [emails, count] = await Email.findAndCount({
+      skip: 0,
+      take: 10,
+      where: {
+        isProcessed: false,
+      },
+    })
 
-    /**
-     * Close Redis connections gracefully.
-     */
-    public async closeRedisConnections() {
-        await this.worker.close()
-        await this.queue.close()
-        await this.queueScheduler.close()
-        await this.connection.disconnect()
-        logger.debug(`Redis connections closed!`)
+    logger.debug(
+      `A total of ${count} emails are not processed (process at most 10)`
+    )
+    for (const email of emails) {
+      email.isProcessed = true
+      await email.save()
+      // TODO email should be sent to users here, but this is just a demo
+      logger.info(
+        `*** Sending email to ${email.email}, order ID = ${email.orderId}, isSuccess = ${email.isSuccess} ***`
+      )
     }
+  }
+
+  /**
+   * Set up cron task to check and process emails regularly.
+   */
+  public async initializeRepeatableJob() {
+    await this.queue.add("cron-check-orders-send-email", "cron", {
+      repeat: {
+        // cron: '* 15 3 * * *', // Repeat job once every day at 3:15 (am)
+        cron: "0 */2 * * * *", // demo, every 2 minutes
+      },
+    })
+  }
+
+  /**
+   * Close Redis connections gracefully.
+   */
+  public async closeRedisConnections() {
+    await this.worker.close()
+    await this.queue.close()
+    await this.queueScheduler.close()
+    await this.connection.disconnect()
+    logger.debug(`Redis connections closed!`)
+  }
 }

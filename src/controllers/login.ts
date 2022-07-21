@@ -13,9 +13,9 @@ const logger = logging(__filename)
  * @param next
  */
 export const getLoginUser = async (ctx: Context, next: Next) => {
-    const id = ctx.state.user.data.id
-    const account = await Account.findOneBy({ id })
-    ctx.body = account
+  const id = ctx.state.user.data.id
+  const account = await Account.findOneBy({ id })
+  ctx.body = account
 }
 
 /**
@@ -24,58 +24,58 @@ export const getLoginUser = async (ctx: Context, next: Next) => {
  * @param next
  */
 export const login = async (ctx: Context, next: Next) => {
-    const { username, password } = ctx.request.body
-    logger.debug(`Entered username: ${username}, password: ${password}`)
+  const { username, password } = ctx.request.body
+  logger.debug(`Entered username: ${username}, password: ${password}`)
 
-    const foundAccount = await Account.findOne({
-        where: { username },
-        select: {
-            id: true,
-            username: true,
-            password: true,
-            firstName: true,
-            lastName: true,
-            createdDate: true,
-            balance: true,
-            isAgreementSigned: true,
-            isAdmin: true,
-            email: true,
+  const foundAccount = await Account.findOne({
+    where: { username },
+    select: {
+      id: true,
+      username: true,
+      password: true,
+      firstName: true,
+      lastName: true,
+      createdDate: true,
+      balance: true,
+      isAgreementSigned: true,
+      isAdmin: true,
+      email: true,
+    },
+  })
+
+  if (foundAccount) {
+    logger.debug(`Found user password: ${foundAccount.password}`)
+    const passwordMatches = await compare(password, foundAccount.password)
+    if (passwordMatches) {
+      logger.debug(`User authenticated successfully!`)
+
+      // remember not to send your password hash to user:
+      foundAccount.password = ""
+
+      const token = jwt.sign(
+        {
+          data: foundAccount,
         },
-    })
-
-    if (foundAccount) {
-        logger.debug(`Found user password: ${foundAccount.password}`)
-        const passwordMatches = await compare(password, foundAccount.password)
-        if (passwordMatches) {
-            logger.debug(`User authenticated successfully!`)
-
-            // remember not to send your password hash to user:
-            foundAccount.password = ""
-
-            let token = jwt.sign(
-                {
-                    data: foundAccount,
-                },
-                JWT_SECRET,
-                {
-                    expiresIn: "7d",
-                }
-            )
-            logger.debug("token", JSON.stringify(token))
-
-            ctx.body = {
-                token,
-                message: "User authenticated.",
-            }
-            return
+        JWT_SECRET,
+        {
+          expiresIn: "7d",
         }
-    }
+      )
+      logger.debug("token", JSON.stringify(token))
 
-    // if you're still here, log in failed, return 401:
-    logger.debug(`Authentication failed!`)
-    ctx.status = 401
-    ctx.body = {
-        token: null,
-        message: "User authentication failed!",
+      ctx.body = {
+        token,
+        message: "User authenticated.",
+      }
+      return
     }
+  }
+
+  // if you're still here, log in failed, return 401:
+  logger.debug(`Authentication failed!`)
+  ctx.status = 401
+  ctx.body = {
+    token: null,
+    message: "User authentication failed!",
+  }
 }

@@ -1,13 +1,9 @@
 import {
-    Entity,
-    PrimaryGeneratedColumn,
-    Column,
-    BaseEntity,
-    Index,
-    OneToMany,
-    CreateDateColumn,
-    UpdateDateColumn,
-    ManyToOne,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  BaseEntity,
+  ManyToOne,
 } from "typeorm"
 import Fund from "./Fund"
 
@@ -16,19 +12,19 @@ import Fund from "./Fund"
  */
 @Entity()
 export default class SharePrice extends BaseEntity {
-    @PrimaryGeneratedColumn()
-    id!: number
+  @PrimaryGeneratedColumn()
+  id!: number
 
-    @Column({ type: "timestamptz", nullable: true })
-    date!: Date
+  @Column({ type: "timestamptz", nullable: true })
+  date!: Date
 
-    @Column({ type: "double precision", default: 0.0 })
-    value!: number
+  @Column({ type: "double precision", default: 0.0 })
+  value!: number
 
-    @ManyToOne(() => Fund, (fund) => fund.sharePrices, {
-        nullable: false,
-        onDelete: "CASCADE",
-        orphanedRowAction: "delete",
-    })
-    fund!: Fund
+  @ManyToOne(() => Fund, (fund) => fund.sharePrices, {
+    nullable: false,
+    onDelete: "CASCADE",
+    orphanedRowAction: "delete",
+  })
+  fund!: Fund
 }

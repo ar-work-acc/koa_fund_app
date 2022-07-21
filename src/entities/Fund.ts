@@ -1,19 +1,17 @@
 import {
-    Entity,
-    PrimaryGeneratedColumn,
-    Column,
-    BaseEntity,
-    Index,
-    OneToMany,
-    CreateDateColumn,
-    UpdateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  BaseEntity,
+  Index,
+  OneToMany,
 } from "typeorm"
 import Order from "./Order"
 import SharePrice from "./SharePrice"
 
 export enum FundType {
-    NORMAL = 0, // pays trading fee with share
-    PREPAY_TRADING_FEE = 1, // trading fee has to be pre-paid
+  NORMAL = 0, // pays trading fee with share
+  PREPAY_TRADING_FEE = 1, // trading fee has to be pre-paid
 }
 
 /**
@@ -21,29 +19,29 @@ export enum FundType {
  */
 @Entity()
 class Fund extends BaseEntity {
-    @PrimaryGeneratedColumn()
-    id!: number
+  @PrimaryGeneratedColumn()
+  id!: number
 
-    @Index({ unique: true })
-    @Column({ length: 255 })
-    name!: string
+  @Index({ unique: true })
+  @Column({ length: 255 })
+  name!: string
 
-    @Column({ type: "smallint", default: FundType.NORMAL })
-    type!: FundType
+  @Column({ type: "smallint", default: FundType.NORMAL })
+  type!: FundType
 
-    @Column({ type: "double precision", default: 0.015 })
-    tradingFee!: number
+  @Column({ type: "double precision", default: 0.015 })
+  tradingFee!: number
 
-    @Column({ default: "(fund prospectus)" })
-    prospectus!: string
+  @Column({ default: "(fund prospectus)" })
+  prospectus!: string
 
-    @OneToMany(() => Order, (order) => order.fund, { cascade: true })
-    orders!: Order[]
+  @OneToMany(() => Order, (order) => order.fund, { cascade: true })
+  orders!: Order[]
 
-    @OneToMany(() => SharePrice, (sharePrice) => sharePrice.fund, {
-        cascade: true,
-    })
-    sharePrices!: SharePrice[]
+  @OneToMany(() => SharePrice, (sharePrice) => sharePrice.fund, {
+    cascade: true,
+  })
+  sharePrices!: SharePrice[]
 }
 
 export default Fund

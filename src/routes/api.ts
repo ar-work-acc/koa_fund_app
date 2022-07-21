@@ -7,12 +7,12 @@ import { JWT_SECRET } from "../config"
 import { logging } from "../utils/logger"
 import { getLoginUser, login } from "../controllers/login"
 import {
-    createOrder,
-    getExchangeRate,
-    getFund,
-    getFundList,
-    getOrder,
-    getOrderList,
+  createOrder,
+  getExchangeRate,
+  getFund,
+  getFundList,
+  getOrder,
+  getOrderList,
 } from "../controllers/fund"
 import { createSharePrice, processOrders } from "../controllers/admin"
 import { adminOnly } from "../middlewares/admin"
@@ -33,9 +33,9 @@ apiRouter.post("login", "/login", login)
  * https://github.com/Foxandxss/koa-unless
  **/
 apiRouter.use(
-    jwtMiddleware({ secret: JWT_SECRET }).unless({
-        path: [/^\/public/],
-    })
+  jwtMiddleware({ secret: JWT_SECRET }).unless({
+    path: [/^\/public/],
+  })
 )
 
 apiRouter.get("login-user-detail", "/user", getLoginUser)
@@ -48,16 +48,16 @@ apiRouter.get("order-detail", "/orders/:id", getOrder)
 
 // admin-only operations:
 apiRouter.post(
-    "admin-create-share-price",
-    "/admin/createSharePrice",
-    adminOnly,
-    createSharePrice
+  "admin-create-share-price",
+  "/admin/createSharePrice",
+  adminOnly,
+  createSharePrice
 )
 apiRouter.post(
-    "admin-process-orders",
-    "/admin/processOrders",
-    adminOnly,
-    processOrders
+  "admin-process-orders",
+  "/admin/processOrders",
+  adminOnly,
+  processOrders
 )
 
 export default apiRouter
