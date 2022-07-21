@@ -48,7 +48,7 @@ describe("APIs admin: users", () => {
   afterAll(async () => {
     logger.debug(`[afterAll] *** destroy DB connection, close Koa server ***`)
     await app.closeDatabaseConnections(false)
-    await server.close()
+    server.close()
   }, 1 * 60 * 1000)
 
   test("user log in", async () => {
