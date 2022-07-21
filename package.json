@@ -24,7 +24,7 @@
   "license": "ISC",
   "dependencies": {
     "@koa/router": "^10.1.1",
-    "@ts-koa/koa-morgan": "^0.0.3",
+    "@ts-koa/koa-morgan": "^0.0.9",
     "bcrypt": "^5.0.1",
     "bullmq": "^1.86.4",
     "dotenv": "^16.0.1",
@@ -52,13 +52,13 @@
     "@types/koa-static": "^4.0.2",
     "@types/lodash": "^4.14.182",
     "@types/supertest": "^2.0.12",
+    "@typescript-eslint/eslint-plugin": "^5.30.7",
+    "@typescript-eslint/parser": "^5.30.7",
+    "eslint": "^8.20.0",
     "jest": "^28.1.1",
     "nodemon": "^2.0.18",
     "ts-jest": "^28.0.5",
     "ts-node": "^10.8.1",
-    "typescript": "^4.7.4",
-    "@typescript-eslint/eslint-plugin": "^5.30.7",
-    "@typescript-eslint/parser": "^5.30.7",
-    "eslint": "^8.20.0"
+    "typescript": "^4.7.4"
   }
 }
